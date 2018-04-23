@@ -3,11 +3,7 @@ title: "Converting a PDF Table to R"
 output: html_document
 ---
 
-<<<<<<< HEAD
 For class discussion in my econometrics course we're going over Eric D. Gould and Alexander Hijzen's paper "Growing Apart, Losing Trust? The Impact of Inequality on Social Capital". A classmate mentioned scraping the tables from the PDF into R, so I gave it a try using Table 1 from the paper. The basic guide for this came from Troy Waters at [DataScience+](https://datascienceplus.com/extracting-tables-from-pdfs-in-r-using-the-tabulizer-package/)
-=======
-For class discussion in my econometrics course we're going over Eric D. Gould and Alexander Hijzen's paper "Growing Apart, Losing Trust? The Impact of Inequality on Social Capital". A classmate mentioned scraping the tables from the PDF into R, so I gave it a try using Table 1 from the paper.
->>>>>>> 0749e6577cb975b38de4414f1a560870b3e26c46
 
 The table isn't ideal for trying this so most of the work was in turning the table into something more useable in R.
 
