@@ -1,0 +1,60 @@
+---
+title: "Converting a PDF Table to R"
+output: html_document
+---
+
+For class discussion in my econmetrics course we're going over Eric D. Gould and Alexander Hijzen's paper "Growing Apart, Losing Trust? The Impact of Inequality on Social Capital". A classmate mentioned scraping the tables from the PDF into R, so I gave it a try using Table 1 from the paper.
+
+The table isn't ideal for trying this so most of the work was in turning the table into something more useable in R.
+
+```{r}
+library(devtools)
+if(!"tabulizer" %in% installed.packages()) install_github("ropensci/tabulizer")
+
+library(tabulizer)
+
+location <- "https://www.imf.org/external/pubs/ft/wp/2016/wp16176.pdf"
+
+out <- extract_tables(location, pages = 26)
+
+#This just takes the matrix out of the list
+#If you pulled multiple tables from one pdf, each index should be another table
+out <- out[[1]]
+
+#Pull the years out so we can rotate later
+year_vec <- out[2,-1]
+
+# Removing the blank entry in year
+year_vec <- year_vec[year_vec != ""]
+
+#Makes a vector of the census years with a value for each observation
+#There must be a cleaner way of doing this
+census_year_vec <- c(rep(1980,4), rep(1990,3), rep(2000,3), rep(2010,2))
+
+#Takes out the year rows, the variable names, and the blank columns from out
+#Converts to numeric
+out_clean <- out[-c(1:2),]
+out_clean <- out_clean[,-1]
+out_clean[out_clean ==""] <- NA
+out_clean <- out_clean[,colSums(is.na(out_clean)) != nrow(out_clean)]
+out_clean[out_clean =="."] <- NA
+
+out_clean <- apply(out_clean, 2, as.numeric)
+
+
+#These should be the same length
+length(year_vec) == length(census_year_vec)
+
+
+
+#Final output data frame, census year and year as factors
+final <- data.frame(census_year_vec, year_vec, t(out_clean))
+
+names(final) <- out[,1]
+
+final[,1] <- as.factor(final[,1])
+
+knitr::kable(final)
+```
+
+I thought it was kind of neat to pull data from a PDF so easily. The cleaning up was mostly for practice, hopefully scraping an actual datset, and not summary statistics, from a PDF would be a bit cleaner.
